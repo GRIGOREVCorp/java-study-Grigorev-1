@@ -3,44 +3,32 @@ package neoflexprojecttask1;
 import java.util.*;
 
 public class NeoFlexProjectTask1 {
-    static Hashtable<String,Integer> countWords;
+    static HashMap<String,Integer> countWords = new HashMap<>();
 
     public static void main(String[] args) {
-        searchWord("Hello Dima, how are you? Hello, I'am Dima dima", "Dima Hello", true);
-        Iterator itr = countWords.keySet().iterator();
-        while(itr.hasNext()) {
-            String word = (String)itr.next();
+        searchWord("Hello<Dima,dima> how are you? Hello, I'am Dima dima", "Dima Hello", true);
+        for (String word : countWords.keySet()) 
             System.out.println("Слово: " + word + " встречается " + 
-                    (int) countWords.get(word) + " раз");
-        }
+                    countWords.get(word) + " раз");
     }
     
-    public static Hashtable<String,Integer> searchWord(String text, String word, boolean ignorCase) {
-        countWords = new Hashtable<String,Integer>();
+    private static void searchWord(String text, String words, boolean ignorCase) {
+        countWords = new HashMap<String,Integer>();
         String[] wordsFromTheText = transformationInMassiv(text);
-        String[] wordsFromTheWord = transformationInMassiv(word);
+        String[] wordsFromTheWords = transformationInMassiv(words);
         int count;
-        for (String d : wordsFromTheWord) {
+        for (String wordFormWords : wordsFromTheWords) {
             count=0;
-            for (String f : wordsFromTheText) {
-                if (((d.compareToIgnoreCase(f))==0)&&(ignorCase==true))
+            for (String wordFormText : wordsFromTheText) {
+                if (((wordFormWords.compareToIgnoreCase(wordFormText))==0)&&(ignorCase))
                     count++;
-                else { if((d.compareTo(f))==0) count++; }
+                else { if((wordFormWords.compareTo(wordFormText))==0) count++; }
             }
-            countWords.put(d,count);
+            countWords.put(wordFormWords,count);
         }
-        return countWords;
     }
     
-    public static String[] transformationInMassiv(String text) {
-        text = text.replaceAll(" ", "_");
-        text = text.replaceAll("\\W", "_");
-        while (true) {            
-            if (text.indexOf("__")!=-1) {
-                text = text.replaceAll("__", "_");
-                continue;
-            } break;
-        }
-        return text.split("_");
+    private static String[] transformationInMassiv(String text) {
+        return text.replaceAll("[^A-Za-z]", " ").split(" ");
     }
 }
